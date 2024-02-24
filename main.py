@@ -8,7 +8,7 @@ min_contour_area = 500
 
 detected_cars = []
 last_detection_times = {"left": None, "right": None}
-time_threshold = 2  # Погрешность в секундах
+time_threshold = 2
 
 
 def detect_cars(frame, side, line_y, line_direction, distance_threshold=20):
@@ -16,7 +16,6 @@ def detect_cars(frame, side, line_y, line_direction, distance_threshold=20):
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     fg_mask = background_subtractor.apply(gray)
 
-    # Применение морфологических операций для уменьшения шума
     fg_mask = cv2.morphologyEx(fg_mask, cv2.MORPH_OPEN, None)
     fg_mask = cv2.morphologyEx(fg_mask, cv2.MORPH_CLOSE, None)
 
@@ -26,7 +25,7 @@ def detect_cars(frame, side, line_y, line_direction, distance_threshold=20):
     for contour in contours:
         if cv2.contourArea(contour) > min_contour_area:
             x, y, w, h = cv2.boundingRect(contour)
-            cx, cy = x + w // 2, y + h // 2  # координаты центра массы машины
+            cx, cy = x + w // 2, y + h // 2
             car = (x, y, x + w, y + h)
             if car not in detected_cars:
                 if line_direction == 'up' and cy < line_y or line_direction == 'down' and cy > line_y:
@@ -53,7 +52,6 @@ def start_video_object_detection(video):
             left_frame = frame[:, :width // 2]
             right_frame = frame[:, width // 2:]
 
-            # Определение линии по центру каждого фрейма
             left_line_y = height // 2
             right_line_y = height // 2
             left_line_direction = 'down'
@@ -62,7 +60,6 @@ def start_video_object_detection(video):
             detect_cars(left_frame, "left", left_line_y, left_line_direction)
             detect_cars(right_frame, "right", right_line_y, right_line_direction)
 
-            # Рисование линии на каждом фрейме
             cv2.line(left_frame, (0, left_line_y), (width // 2, left_line_y), (0, 0, 0), 2)
             cv2.line(right_frame, (0, right_line_y), (width // 2, right_line_y), (0, 0, 0), 2)
 
@@ -76,6 +73,6 @@ def start_video_object_detection(video):
 
 
 if __name__ == '__main__':
-    video = input("Path to video (or URL): ")
+    video = 'https://media.gov39.ru/webcam-rec/mapp_gzhehodki.stream/playlist.m3u8'
     start_video_object_detection(video)
 
