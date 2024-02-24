@@ -1,4 +1,3 @@
-
 import cv2
 import datetime
 import time
@@ -75,4 +74,3 @@ def start_video_object_detection(video):
 if __name__ == '__main__':
     video = 'https://media.gov39.ru/webcam-rec/mapp_gzhehodki.stream/playlist.m3u8'
     start_video_object_detection(video)
-
