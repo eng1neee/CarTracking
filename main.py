@@ -56,8 +56,8 @@ def start_video_object_detection(video):
             left_line_direction = 'down'
             right_line_direction = 'up'
 
-            detect_cars(left_frame, "left", left_line_y, left_line_direction)
-            detect_cars(right_frame, "right", right_line_y, right_line_direction)
+            detect_cars(left_frame, "From Poland to Russia", left_line_y, left_line_direction)
+            detect_cars(right_frame, "From Russia to Poland", right_line_y, right_line_direction)
 
             cv2.line(left_frame, (0, left_line_y), (width // 2, left_line_y), (0, 0, 0), 2)
             cv2.line(right_frame, (0, right_line_y), (width // 2, right_line_y), (0, 0, 0), 2)
