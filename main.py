@@ -1,4 +1,3 @@
-
 import cv2
 import datetime
 import time
@@ -9,7 +8,6 @@ min_contour_area = 500
 detected_cars = []
 last_detection_times = {"From Poland to Russia": None, "From Russia to Poland": None}
 time_threshold = 2
-fur_detection = set()
 
 
 def detect_cars(frame, side, line_y, line_direction, side_name, distance_threshold=20):
@@ -29,16 +27,17 @@ def detect_cars(frame, side, line_y, line_direction, side_name, distance_thresho
             cx, cy = x + w // 2, y + h // 2
             car = (x, y, x + w, y + h)
             if car not in detected_cars:
-                if (line_direction == 'up' and cy < line_y - h) or (line_direction == 'down' and cy > line_y + h):
-                    distance_to_line = abs(cy - line_y)
-                    if distance_to_line < distance_threshold:
-                        current_time = time.time()
-                        last_detection_time = last_detection_times[side_name]
-                        if last_detection_time is None or current_time - last_detection_time > time_threshold:
-                            detected_cars.append(car)
-                            last_detection_times[side_name] = current_time
-                            now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-                            print(f"Car detected on {side_name} side at {now}")
+                if line_direction == 'down' and cy > line_y or line_direction == 'up' and cy < line_y:
+                    if line_direction == 'down' and cy < line_y + h // 2 or line_direction == 'up' and cy > line_y - h // 2:
+                        distance_to_line = abs(cy - line_y)
+                        if distance_to_line < distance_threshold:
+                            current_time = time.time()
+                            last_detection_time = last_detection_times[side_name]
+                            if last_detection_time is None or current_time - last_detection_time > time_threshold:
+                                detected_cars.append(car)
+                                last_detection_times[side_name] = current_time
+                                now = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                                print(f"Car detected on {side_name} side at {now}")
 
 
 def start_video_object_detection(video):
@@ -64,7 +63,8 @@ def start_video_object_detection(video):
             cv2.line(left_frame, (0, left_line_y), (width // 2, left_line_y), (0, 0, 0), 2)
             cv2.line(right_frame, (0, right_line_y), (width // 2, right_line_y), (0, 0, 0), 2)
 
-            cv2.imshow("Video Capture", frame)
+            cv2.imshow("Left Frame", left_frame)
+            cv2.imshow("Right Frame", right_frame)
             cv2.waitKey(1)
 
         video_capture.release()
