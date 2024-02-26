@@ -1,3 +1,4 @@
+
 import cv2
 import datetime
 import time
@@ -8,6 +9,7 @@ min_contour_area = 500
 detected_cars = []
 last_detection_times = {"From Poland to Russia": None, "From Russia to Poland": None}
 time_threshold = 2
+fur_detection = set()
 
 
 def detect_cars(frame, side, line_y, line_direction, side_name, distance_threshold=20):
@@ -27,7 +29,7 @@ def detect_cars(frame, side, line_y, line_direction, side_name, distance_thresho
             cx, cy = x + w // 2, y + h // 2
             car = (x, y, x + w, y + h)
             if car not in detected_cars:
-                if line_direction == 'up' and cy < line_y or line_direction == 'down' and cy > line_y:
+                if (line_direction == 'up' and cy < line_y - h) or (line_direction == 'down' and cy > line_y + h):
                     distance_to_line = abs(cy - line_y)
                     if distance_to_line < distance_threshold:
                         current_time = time.time()
